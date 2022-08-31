@@ -1,0 +1,17 @@
+[flake8]
+per-file-ignores =
+	# imported but unused
+	__init__.py:F401
+exclude = 
+	.git,
+	__pycache__,
+	env,
+	static,
+	media,
+	templates,
+	migrations,
+	admin.py,
+	tests.py
+max-line-length = 119
+format = html
+htmldir = flake-report
