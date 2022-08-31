@@ -21,9 +21,15 @@ class EventStatus(Enum):
 
 
 class Event(TimeStamped):
-    client_id = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="event_client")
+    client_id = models.ForeignKey(
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="event_client",
+    )
     support_contact_id = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="event_support_contact",
+        to=settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="event_support_contact",
     )
     event_status = models.CharField(max_length=10, choices=EventStatus.choices())
     attendees = models.PositiveIntegerField()
