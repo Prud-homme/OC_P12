@@ -2,8 +2,7 @@ from enum import Enum
 
 from django.conf import settings
 from django.db import models
-
-from .timestamped import TimeStamped
+from django.utils import timezone
 
 
 class EventStatus(Enum):
@@ -20,7 +19,7 @@ class EventStatus(Enum):
         return [(key.value, key.name) for key in cls]
 
 
-class Event(TimeStamped):
+class Event(models.Model):
     client_id = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -35,3 +34,12 @@ class Event(TimeStamped):
     attendees = models.PositiveIntegerField()
     event_date = models.DateTimeField()
     notes = models.TextField()
+    date_created = models.DateTimeField(editable=False)
+    date_updated = models.DateTimeField(editable=False)
+
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = timezone.now()
+
+        self.last_modified = timezone.now()
+        return super(Event, self).save(*args, **kwargs)
