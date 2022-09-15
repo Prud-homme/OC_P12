@@ -1,1 +1,1 @@
-from .client import Client
+from .contract import ContractSerializer

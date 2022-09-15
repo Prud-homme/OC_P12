@@ -1,3 +1,9 @@
 from django.shortcuts import render
+from rest_framework.generics import CreateAPIView
 
-# Create your views here.
+from crm.contract.models import Contract
+from crm.contract.serializers import ContractSerializer
+
+
+class CreateContract(CreateAPIView):
+	pass

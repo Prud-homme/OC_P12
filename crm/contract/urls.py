@@ -15,4 +15,9 @@ Including another URLconf
 """
 from django.urls import path
 
-urlpatterns = []
+from crm.contract.views import CreateContract
+
+
+urlpatterns = [
+    path('', CreateContract.as_view(), name='contract'),
+]
