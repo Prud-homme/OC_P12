@@ -1,1 +1,1 @@
-from .contract import CreateContract
+from .contract import CreateContract, RetrieveUpdateContract
