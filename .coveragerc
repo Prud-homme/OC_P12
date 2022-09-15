@@ -1,0 +1,12 @@
+[run]
+omit =
+    # omit everything in /env
+    env\*
+	# omit anything in tests directory anywhere
+    *\tests\*
+	# omit anything in migrations directory anywhere
+    *\migrations\*
+    # omit everything in /epic_events
+    epic_events\*
+    # omit files
+	manage.py
