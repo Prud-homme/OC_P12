@@ -1,5 +1,5 @@
 from rest_framework.permissions import DjangoModelPermissions
-
+import copy
 
 class CustomDjangoModelPermission(DjangoModelPermissions):
 

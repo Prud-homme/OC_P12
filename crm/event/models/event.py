@@ -38,8 +38,8 @@ class Event(models.Model):
     date_updated = models.DateTimeField(editable=False)
 
     def save(self, *args, **kwargs):
-        if not self.creation_date:
-            self.creation_date = timezone.now()
+        if not self.date_created:
+            self.date_created = timezone.now()
 
-        self.last_modified = timezone.now()
+        self.date_updated = timezone.now()
         return super(Event, self).save(*args, **kwargs)
