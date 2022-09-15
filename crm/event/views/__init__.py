@@ -1,1 +1,1 @@
-from .event import CreateEvent
+from .event import CreateEvent, RetrieveUpdateEvent
