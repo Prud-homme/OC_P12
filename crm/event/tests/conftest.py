@@ -6,6 +6,7 @@ from django.contrib.auth.models import Group
 from rest_framework.test import APIClient
 from datetime import datetime
 from crm.event.models import Event
+from crm.event.serializers import EventSerializer
 from crm.client.models import Client
 from crm.contract.models import Contract
 
@@ -64,6 +65,8 @@ def crm(db, create_user):
         event_date=datetime(2022, 9, 18).strftime(r"%Y-%m-%dT%H:%M:%SZ"),
         notes="Event A",
     )
+    serializer = EventSerializer(event_a)
+    serial_event_a = serializer.data
 
     contract_a = Contract.objects.create(
         sales_contact = sales_user_a,
@@ -81,6 +84,7 @@ def crm(db, create_user):
         "management_user": management_user,
         "client_a": client_a,
         "event_a": event_a,
+        "serial_event_a": serial_event_a,
         "contract_a": contract_a,
 
     }

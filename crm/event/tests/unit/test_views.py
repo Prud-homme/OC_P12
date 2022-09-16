@@ -1,7 +1,6 @@
 import pytest
 
 from django.urls import reverse
-from crm.event.models import Event
 from datetime import datetime
 import json
 
@@ -46,5 +45,45 @@ class TestEvent():
         detail_message = json.loads(content)["detail"]
         assert response.status_code == 403
         assert detail_message == "Vous n'avez pas la permission d'effectuer cette action."
+
+        api_client.force_authenticate(user=None)
+
+    def test_event_get_method(self, api_client, crm):
+        sales_user_a = crm["sales_user_a"]
+        support_user_a = crm["support_user_a"]
+        support_user_b = crm["support_user_b"]
+        management_user = crm["management_user"]
+        event_a = crm["event_a"]
+        serial_event_a = crm["serial_event_a"]
+
+        path = reverse('event-details', kwargs={"pk": event_a.id})
+
+        api_client.force_authenticate(user=sales_user_a)
+        response = api_client.get(path)
+        content = response.content.decode()
+        detail_message = json.loads(content)["detail"]
+        assert response.status_code == 403
+        assert detail_message == "Vous n'avez pas la permission d'effectuer cette action."
+
+        api_client.force_authenticate(user=support_user_a)
+        response = api_client.get(path)
+        content = response.content.decode()
+        data = json.loads(content)
+        assert response.status_code == 200
+        assert data == serial_event_a
+
+        api_client.force_authenticate(user=support_user_b)
+        response = api_client.get(path)
+        content = response.content.decode()
+        detail_message = json.loads(content)["detail"]
+        assert response.status_code == 404
+        assert detail_message == "Pas trouvé."
+
+        api_client.force_authenticate(user=management_user)
+        response = api_client.get(path)
+        content = response.content.decode()
+        data = json.loads(content)
+        assert response.status_code == 200
+        assert data == serial_event_a
 
         api_client.force_authenticate(user=None)
