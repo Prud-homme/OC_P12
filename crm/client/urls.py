@@ -15,4 +15,9 @@ Including another URLconf
 """
 from django.urls import path
 
-urlpatterns = []
+from crm.client.views import CreateClient, RetrieveUpdateClient
+
+urlpatterns = [
+    path("", CreateClient.as_view(), name="client"),
+    path("<int:pk>/", RetrieveUpdateClient.as_view(), name="client-details"),
+]
