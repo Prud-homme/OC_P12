@@ -38,7 +38,7 @@ def create_groups(apps, schema_migration):
 
     ct = ContentType.objects.get_for_model(Client)
     add_client = Permission.objects.create(
-        codename="can_add_client", name="Can add client", content_type=ct
+        codename="add_client", name="Can add client", content_type=ct
     )
     change_client = Permission.objects.create(
         codename="change_client", name="Can change client", content_type=ct
