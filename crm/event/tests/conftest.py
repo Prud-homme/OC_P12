@@ -57,6 +57,16 @@ def crm(db, create_user):
         sales_contact=sales_user_a,
     )
 
+    client_b = Client.objects.create(
+        firstname="Jane",
+        lastname="Doe",
+        email="janedoe@example.com", 
+        phone="0000000000",
+        mobile="0000000000",
+        company_name="Example",
+        sales_contact=sales_user_a,
+    )
+
     event_a = Event.objects.create(
         client=client_a,
         support_contact=support_user_a,
@@ -83,6 +93,7 @@ def crm(db, create_user):
         "support_user_b": support_user_b,
         "management_user": management_user,
         "client_a": client_a,
+        "client_b": client_b,
         "event_a": event_a,
         "serial_event_a": serial_event_a,
         "contract_a": contract_a,
