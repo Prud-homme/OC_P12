@@ -8,5 +8,8 @@ class EventSerializer(ModelSerializer):
 
     class Meta:
         model = Event
-        fields = [field.name for field in Event._meta.get_fields() if field.name not in ("date_created", "date_updated")]
-
+        fields = [
+            field.name
+            for field in Event._meta.get_fields()
+            if field.name not in ("date_created", "date_updated")
+        ]

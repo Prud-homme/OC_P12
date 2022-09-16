@@ -17,8 +17,7 @@ from django.urls import path
 
 from crm.event.views import CreateEvent, RetrieveUpdateEvent
 
-
 urlpatterns = [
-    path('', CreateEvent.as_view(), name='event'),
-    path('<int:pk>/', RetrieveUpdateEvent.as_view(), name='event-details'),
+    path("", CreateEvent.as_view(), name="event"),
+    path("<int:pk>/", RetrieveUpdateEvent.as_view(), name="event-details"),
 ]
