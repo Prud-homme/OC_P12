@@ -6,12 +6,12 @@ from crm.client.models import Client
 
 
 class Contract(models.Model):
-    sales_contact_id = models.ForeignKey(
+    sales_contact = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="contract_sales_contact",
     )
-    client_id = models.ForeignKey(
+    client = models.ForeignKey(
         to=Client,
         on_delete=models.CASCADE,
         related_name="contract_client",

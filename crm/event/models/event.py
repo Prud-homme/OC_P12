@@ -22,12 +22,12 @@ class EventStatus(Enum):
 
 
 class Event(models.Model):
-    client_id = models.ForeignKey(
+    client = models.ForeignKey(
         to=Client,
         on_delete=models.CASCADE,
         related_name="event_client",
     )
-    support_contact_id = models.ForeignKey(
+    support_contact = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="event_support_contact",

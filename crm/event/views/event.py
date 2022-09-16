@@ -13,4 +13,7 @@ class CreateEvent(CreateAPIView):
     serializer_class = EventSerializer
 
 class RetrieveUpdateEvent(RetrieveUpdateAPIView):
-    pass
+    ermission_classes = [CustomDjangoModelPermission]
+
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer

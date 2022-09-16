@@ -18,7 +18,7 @@ def api_client():
 def test_password():
    return '?2.PabY8MB'
 
-@pytest.fixture
+@pytest.fixture#@pytest.mark.django_db
 def create_user(db, django_user_model, test_password):
    def make_user(**kwargs):
        kwargs['password'] = test_password
@@ -27,7 +27,7 @@ def create_user(db, django_user_model, test_password):
        return django_user_model.objects.create_user(**kwargs)
    return make_user
 
-@pytest.fixture
+@pytest.fixture#@pytest.mark.django_db
 def crm(db, create_user):
     sales_user_a = create_user()
     sales_user_b = create_user()
@@ -53,12 +53,12 @@ def crm(db, create_user):
         phone="0000000000",
         mobile="0000000000",
         company_name="Example",
-        sales_contact_id=sales_user_a,
+        sales_contact=sales_user_a,
     )
 
     event_a = Event.objects.create(
-        client_id=client_a,
-        support_contact_id=support_user_a,
+        client=client_a,
+        support_contact=support_user_a,
         event_status="ongoing",
         attendees=1000,
         event_date=datetime(2022, 9, 18).strftime(r"%Y-%m-%dT%H:%M:%SZ"),
@@ -66,8 +66,8 @@ def crm(db, create_user):
     )
 
     contract_a = Contract.objects.create(
-        sales_contact_id = sales_user_a,
-        client_id = client_a,
+        sales_contact = sales_user_a,
+        client = client_a,
         status = True,
         amount = 10000.99,
         payment_due = datetime(2022, 8, 10).strftime(r"%Y-%m-%dT%H:%M:%SZ"),
@@ -86,11 +86,11 @@ def crm(db, create_user):
     }
     return config
 
-@pytest.fixture
-def api_client_with_credentials(
-        db, create_user, api_client,
-    ):
-    user = create_user()
-    api_client.force_authenticate(user=user)
-    yield api_client
-    api_client.force_authenticate(user=None)
+# @pytest.fixture#@pytest.mark.django_db
+# def api_client_with_credentials(
+#         db, create_user, api_client,
+#     ):
+#     user = create_user()
+#     api_client.force_authenticate(user=user)
+#     yield api_client
+#     api_client.force_authenticate(user=None)
