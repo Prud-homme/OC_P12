@@ -129,7 +129,6 @@ class TestEvent():
         response = api_client.put(path, post_data)
         content = response.content.decode()
         detail_message = json.loads(content)["detail"]
-        breakpoint()
         assert response.status_code == 404
         assert detail_message == "Pas trouvé."
 
@@ -150,5 +149,66 @@ class TestEvent():
         assert response.status_code == 200
         assert data_to_compare == post_data
         assert event_id == event_a.id
+
+        api_client.force_authenticate(user=None)
+
+    def test_event_patch_method(self, api_client, crm):
+        sales_user_a = crm["sales_user_a"]
+        support_user_a = crm["support_user_a"]
+        support_user_b = crm["support_user_b"]
+        management_user = crm["management_user"]
+        client_a = crm["client_a"]
+        client_b = crm["client_b"]
+        event_a = crm["event_a"]
+
+        serial_event_a = copy.deepcopy(crm["serial_event_a"])
+        serial_event_a["client"] = client_b.id
+        serial_event_a["support_contact"] = support_user_b.id
+        serial_event_a["attendees"] = 5000
+
+        path = reverse('event-details', kwargs={"pk": event_a.id})
+        
+        patch_data = {
+            "client": client_b.id,
+            "support_contact": support_user_b.id,
+            "attendees": 5000,
+        }
+
+        api_client.force_authenticate(user=sales_user_a)
+        response = api_client.patch(path, patch_data)
+        content = response.content.decode()
+        detail_message = json.loads(content)["detail"]
+        assert response.status_code == 403
+        assert detail_message == "Vous n'avez pas la permission d'effectuer cette action."
+
+        api_client.force_authenticate(user=support_user_a)
+        response = api_client.patch(path, patch_data)
+        content = response.content.decode()
+        data = json.loads(content)
+        assert response.status_code == 200
+        assert data == serial_event_a
+
+        response = api_client.patch(path, patch_data)
+        content = response.content.decode()
+        detail_message = json.loads(content)["detail"]
+        assert response.status_code == 404
+        assert detail_message == "Pas trouvé."
+
+        patch_data = {
+            "client": client_a.id,
+            "support_contact": support_user_a.id,
+            "attendees": 1000,
+        }
+
+        serial_event_a["client"] = client_a.id
+        serial_event_a["support_contact"] = support_user_a.id
+        serial_event_a["attendees"] = 1000
+
+        api_client.force_authenticate(user=management_user)
+        response = api_client.patch(path, patch_data)
+        content = response.content.decode()
+        data = json.loads(content)
+        assert response.status_code == 200
+        assert data == serial_event_a
 
         api_client.force_authenticate(user=None)
