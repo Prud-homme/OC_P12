@@ -4,6 +4,8 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
+from crm.client.models import Client
+
 
 class EventStatus(Enum):
     """Class that defines the different status of event"""
@@ -21,7 +23,7 @@ class EventStatus(Enum):
 
 class Event(models.Model):
     client_id = models.ForeignKey(
-        to=settings.AUTH_USER_MODEL,
+        to=Client,
         on_delete=models.CASCADE,
         related_name="event_client",
     )
