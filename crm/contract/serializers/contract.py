@@ -8,5 +8,8 @@ class ContractSerializer(ModelSerializer):
 
     class Meta:
         model = Contract
-        fields = [field.name for field in Contract._meta.get_fields() if field.name not in ("date_created", "date_updated")]
-
+        fields = [
+            field.name
+            for field in Contract._meta.get_fields()
+            if field.name not in ("date_created", "date_updated")
+        ]
