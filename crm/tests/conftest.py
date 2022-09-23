@@ -23,7 +23,7 @@ def test_password():
     return "?2.PabY8MB"
 
 
-@pytest.fixture  # @pytest.mark.django_db
+@pytest.fixture
 def create_user(db, django_user_model, test_password):
     def make_user(**kwargs):
         kwargs["password"] = test_password
@@ -34,7 +34,7 @@ def create_user(db, django_user_model, test_password):
     return make_user
 
 
-@pytest.fixture  # @pytest.mark.django_db
+@pytest.fixture
 def create_superuser(db, django_user_model, test_password):
     def make_superuser(**kwargs):
         kwargs["password"] = test_password

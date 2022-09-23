@@ -1,8 +1,6 @@
-import pytest
 from django.urls import resolve, reverse
 
 
-@pytest.mark.django_db
 def test_contract_url():
     path = reverse("contract", kwargs={})
 
@@ -10,7 +8,6 @@ def test_contract_url():
     assert resolve(path).view_name == "contract"
 
 
-@pytest.mark.django_db
 def test_contract_details_url():
     path = reverse("contract-details", kwargs={"pk": 1})
 
