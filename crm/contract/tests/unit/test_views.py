@@ -225,3 +225,40 @@ class TestContract:
         assert data == serial_contract_a
 
         api_client.force_authenticate(user=None)
+
+    def test_forbidden_routes(self, api_client, crm):
+        superuser = crm["superuser"]
+        client_a = crm["client_a"]
+        sales_user_a = crm["sales_user_a"]
+
+        post_data = {
+            "sales_contact": sales_user_a.id,
+            "client": client_a.id,
+            "status": True,
+            "amount": 1250.99,
+            "payment_due": datetime(2022, 9, 15).strftime(r"%Y-%m-%dT%H:%M:%SZ"),
+        }
+
+        api_client.force_authenticate(user=superuser)
+        response = api_client.put(self.contract_path, post_data)
+        assert response.status_code == 405
+
+        response = api_client.patch(self.contract_path, post_data)
+        assert response.status_code == 405
+
+        response = api_client.get(self.contract_path)
+        assert response.status_code == 405
+
+        response = api_client.delete(self.contract_path)
+        assert response.status_code == 405
+
+        contract_a = crm["contract_a"]
+        path = reverse("contract-details", kwargs={"pk": contract_a.id})
+
+        response = api_client.post(path, post_data)
+        assert response.status_code == 405
+
+        response = api_client.delete(path)
+        assert response.status_code == 405
+
+        api_client.force_authenticate(user=None)

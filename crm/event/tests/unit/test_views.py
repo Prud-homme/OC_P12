@@ -11,7 +11,7 @@ class TestEvent:
 
     event_path = reverse("event", kwargs={})
 
-    def test_event_post_method(self, api_client, crm):
+    def test_create_event_post_method(self, api_client, crm):
         client_a = crm["client_a"]
         sales_user_a = crm["sales_user_a"]
         support_user_a = crm["support_user_a"]
@@ -32,7 +32,6 @@ class TestEvent:
         data_to_compare = {
             key: value for key, value in json.loads(content).items() if key != "id"
         }
-
         assert response.status_code == 201
         assert post_data == data_to_compare
 
@@ -56,7 +55,7 @@ class TestEvent:
 
         api_client.force_authenticate(user=None)
 
-    def test_event_get_method(self, api_client, crm):
+    def test_read_event_get_method(self, api_client, crm):
         sales_user_a = crm["sales_user_a"]
         support_user_a = crm["support_user_a"]
         support_user_b = crm["support_user_b"]
@@ -98,7 +97,7 @@ class TestEvent:
 
         api_client.force_authenticate(user=None)
 
-    def test_event_put_method(self, api_client, crm):
+    def test_update_event_put_method(self, api_client, crm):
         sales_user_a = crm["sales_user_a"]
         support_user_a = crm["support_user_a"]
         support_user_b = crm["support_user_b"]
@@ -166,7 +165,7 @@ class TestEvent:
 
         api_client.force_authenticate(user=None)
 
-    def test_event_patch_method(self, api_client, crm):
+    def test_update_event_patch_method(self, api_client, crm):
         sales_user_a = crm["sales_user_a"]
         support_user_a = crm["support_user_a"]
         support_user_b = crm["support_user_b"]
@@ -226,5 +225,43 @@ class TestEvent:
         data = json.loads(content)
         assert response.status_code == 200
         assert data == serial_event_a
+
+        api_client.force_authenticate(user=None)
+
+    def test_forbidden_routes(self, api_client, crm):
+        superuser = crm["superuser"]
+        support_user_b = crm["support_user_b"]
+        client_b = crm["client_b"]
+        event_a = crm["event_a"]
+
+        post_data = {
+            "client": client_b.id,
+            "support_contact": support_user_b.id,
+            "event_status": "ended",
+            "attendees": 10000,
+            "event_date": datetime(2022, 9, 17).strftime(r"%Y-%m-%dT%H:%M:%SZ"),
+            "notes": "[PUT] Event Test",
+        }
+
+        api_client.force_authenticate(user=superuser)
+        response = api_client.put(self.event_path, post_data)
+        assert response.status_code == 405
+
+        response = api_client.patch(self.event_path, post_data)
+        assert response.status_code == 405
+
+        response = api_client.get(self.event_path)
+        assert response.status_code == 405
+
+        response = api_client.delete(self.event_path)
+        assert response.status_code == 405
+
+        path = reverse("event-details", kwargs={"pk": event_a.id})
+
+        response = api_client.post(path, post_data)
+        assert response.status_code == 405
+
+        response = api_client.delete(path)
+        assert response.status_code == 405
 
         api_client.force_authenticate(user=None)
