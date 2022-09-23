@@ -10,7 +10,7 @@ class TestClient:
 
     client_path = reverse("client", kwargs={})
 
-    def test_client_post_method(self, api_client, crm):
+    def test_create_client_post_method(self, api_client, crm):
         sales_user_a = crm["sales_user_a"]
         support_user_a = crm["support_user_a"]
         management_user = crm["management_user"]
@@ -56,7 +56,7 @@ class TestClient:
 
         api_client.force_authenticate(user=None)
 
-    def test_client_get_method(self, api_client, crm):
+    def test_read_client_get_method(self, api_client, crm):
         sales_user_a = crm["sales_user_a"]
         sales_user_b = crm["sales_user_b"]
         support_user_a = crm["support_user_a"]
@@ -116,7 +116,7 @@ class TestClient:
 
         api_client.force_authenticate(user=None)
 
-    def test_client_put_method(self, api_client, crm):
+    def test_update_client_put_method(self, api_client, crm):
         sales_user_a = crm["sales_user_a"]
         sales_user_b = crm["sales_user_b"]
         support_user_a = crm["support_user_a"]
@@ -188,7 +188,7 @@ class TestClient:
 
         api_client.force_authenticate(user=None)
 
-    def test_client_patch_method(self, api_client, crm):
+    def test_update_client_patch_method(self, api_client, crm):
         sales_user_a = crm["sales_user_a"]
         sales_user_b = crm["sales_user_b"]
         support_user_a = crm["support_user_a"]
@@ -258,5 +258,43 @@ class TestClient:
         ]
         assert response.status_code == 200
         assert False not in compared_data
+
+        api_client.force_authenticate(user=None)
+
+    def test_forbidden_routes(self, api_client, crm):
+        superuser = crm["superuser"]
+        sales_user_a = crm["sales_user_a"]
+
+        post_data = {
+            "firstname": "John Jr",
+            "lastname": "Doe",
+            "email": "johnjrdoe@example.com",
+            "phone": "0000000000",
+            "mobile": "0000000000",
+            "company_name": "Example",
+            "sales_contact": sales_user_a.id,
+        }
+
+        api_client.force_authenticate(user=superuser)
+        response = api_client.put(self.client_path, post_data)
+        assert response.status_code == 405
+
+        response = api_client.patch(self.client_path, post_data)
+        assert response.status_code == 405
+
+        response = api_client.get(self.client_path)
+        assert response.status_code == 405
+
+        response = api_client.delete(self.client_path)
+        assert response.status_code == 405
+
+        client_a = crm["client_a"]
+        path = reverse("client-details", kwargs={"pk": client_a.id})
+
+        response = api_client.post(path, post_data)
+        assert response.status_code == 405
+
+        response = api_client.delete(path)
+        assert response.status_code == 405
 
         api_client.force_authenticate(user=None)
