@@ -5,16 +5,16 @@ from .models import Event
 
 class EventAdmin(admin.ModelAdmin):
     fields = [
-        "client_id",
-        "support_contact_id",
+        "client",
+        "support_contact",
         "event_status",
         "attendees",
         "event_date",
         "notes",
     ]
     list_display = (
-        "client_id",
-        "support_contact_id",
+        "client",
+        "support_contact",
         "event_status",
         "attendees",
         "event_date",
