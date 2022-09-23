@@ -45,6 +45,7 @@ def create_superuser(db, django_user_model, test_password):
 
     return make_superuser
 
+
 @pytest.fixture
 @pytest.mark.django_db
 def crm(db, create_user, create_superuser):
