@@ -107,6 +107,12 @@ class TestContract:
         assert response.status_code == 200
         assert count == 0
 
+        response = api_client.get(self.contract_path + "?date=2022-08-10")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 1
+
         response = api_client.get(self.contract_path + "?amount=10")
         content = response.content.decode()
         count = json.loads(content)["count"]
