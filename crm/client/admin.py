@@ -11,7 +11,7 @@ class ClientAdmin(admin.ModelAdmin):
         "phone",
         "mobile",
         "company_name",
-        "sales_contact_id",
+        "sales_contact",
     ]
     list_display = (
         "email",
@@ -20,7 +20,7 @@ class ClientAdmin(admin.ModelAdmin):
         "phone",
         "mobile",
         "company_name",
-        "sales_contact_id",
+        "sales_contact",
         "date_created",
         "date_updated",
     )

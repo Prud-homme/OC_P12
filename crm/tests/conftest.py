@@ -23,7 +23,7 @@ def test_password():
     return "?2.PabY8MB"
 
 
-@pytest.fixture  # @pytest.mark.django_db
+@pytest.fixture
 def create_user(db, django_user_model, test_password):
     def make_user(**kwargs):
         kwargs["password"] = test_password
@@ -34,7 +34,7 @@ def create_user(db, django_user_model, test_password):
     return make_user
 
 
-@pytest.fixture  # @pytest.mark.django_db
+@pytest.fixture
 def create_superuser(db, django_user_model, test_password):
     def make_superuser(**kwargs):
         kwargs["password"] = test_password
@@ -90,6 +90,16 @@ def crm(db, create_user, create_superuser):
         sales_contact=sales_user_a,
     )
 
+    Client.objects.create(
+        firstname="Nathan",
+        lastname="Irving",
+        email="n.hirving@azerty.com",
+        phone="0000000000",
+        mobile="0000000000",
+        company_name="AzErty",
+        sales_contact=sales_user_a,
+    )
+
     event_a = Event.objects.create(
         client=client_a,
         support_contact=support_user_a,
@@ -101,6 +111,15 @@ def crm(db, create_user, create_superuser):
     serializer = EventSerializer(event_a)
     serial_event_a = serializer.data
 
+    Event.objects.create(
+        client=client_b,
+        support_contact=support_user_a,
+        event_status="ongoing",
+        attendees=1000,
+        event_date=datetime(2022, 9, 18).strftime(r"%Y-%m-%dT%H:%M:%SZ"),
+        notes="Event BA",
+    )
+
     contract_a = Contract.objects.create(
         sales_contact=sales_user_a,
         client=client_a,
@@ -110,6 +129,14 @@ def crm(db, create_user, create_superuser):
     )
     serializer = ContractSerializer(contract_a)
     serial_contract_a = serializer.data
+
+    Contract.objects.create(
+        sales_contact=sales_user_a,
+        client=client_b,
+        status=True,
+        amount=500,
+        payment_due=datetime(2022, 7, 10).strftime(r"%Y-%m-%dT%H:%M:%SZ"),
+    )
 
     config = {
         "superuser": superuser,

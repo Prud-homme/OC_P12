@@ -11,7 +11,7 @@ class TestContract:
 
     contract_path = reverse("contract", kwargs={})
 
-    def test_contract_post_method(self, api_client, crm):
+    def test_create_contract_post_method(self, api_client, crm):
         client_a = crm["client_a"]
         sales_user_a = crm["sales_user_a"]
         support_user_a = crm["support_user_a"]
@@ -55,7 +55,7 @@ class TestContract:
 
         api_client.force_authenticate(user=None)
 
-    def test_contract_get_method(self, api_client, crm):
+    def test_read_contract_get_method(self, api_client, crm):
         sales_user_a = crm["sales_user_a"]
         sales_user_b = crm["sales_user_b"]
         support_user_a = crm["support_user_a"]
@@ -95,9 +95,65 @@ class TestContract:
         assert response.status_code == 200
         assert data == serial_contract_a
 
+        response = api_client.get(self.contract_path)
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 2
+
+        response = api_client.get(self.contract_path + "?date=2021-09-18")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 0
+
+        response = api_client.get(self.contract_path + "?amount=10")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 0
+
+        response = api_client.get(self.contract_path + "?email=janedoe@example.com")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 1
+
+        response = api_client.get(self.contract_path + "?email=jagrnedoe@example.com")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 0
+
+        response = api_client.get(self.contract_path + "?lastname=doe")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 2
+
+        response = api_client.get(self.contract_path + "?lastname=irvng")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 0
+
+        response = api_client.get(
+            self.contract_path + "?email=janedoe@example.com&lastname=doe"
+        )
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 1
+
+        response = api_client.get(self.contract_path + "?title=janedoe@example.com")
+        content = response.content.decode()
+        detail_message = json.loads(content)["detail"]
+        assert response.status_code == 400
+        assert detail_message == "Le(s) filtre(s) n'existe(nt) pas"
+
         api_client.force_authenticate(user=None)
 
-    def test_contract_put_method(self, api_client, crm):
+    def test_update_contract_put_method(self, api_client, crm):
         sales_user_a = crm["sales_user_a"]
         sales_user_b = crm["sales_user_b"]
         support_user_a = crm["support_user_a"]
@@ -163,7 +219,7 @@ class TestContract:
 
         api_client.force_authenticate(user=None)
 
-    def test_contract_patch_method(self, api_client, crm):
+    def test_update_contract_patch_method(self, api_client, crm):
         sales_user_a = crm["sales_user_a"]
         sales_user_b = crm["sales_user_b"]
         support_user_a = crm["support_user_a"]
@@ -244,9 +300,6 @@ class TestContract:
         assert response.status_code == 405
 
         response = api_client.patch(self.contract_path, post_data)
-        assert response.status_code == 405
-
-        response = api_client.get(self.contract_path)
         assert response.status_code == 405
 
         response = api_client.delete(self.contract_path)
