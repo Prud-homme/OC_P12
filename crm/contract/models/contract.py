@@ -1,8 +1,12 @@
+import logging
+
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
 
 from crm.client.models import Client
+
+logger = logging.getLogger(__name__)
 
 
 class Contract(models.Model):
@@ -27,4 +31,5 @@ class Contract(models.Model):
             self.date_created = timezone.now()
 
         self.date_updated = timezone.now()
-        return super(Contract, self).save(*args, **kwargs)
+        super(Contract, self).save(*args, **kwargs)
+        logger.info("Database has been successfully modified")
