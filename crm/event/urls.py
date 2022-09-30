@@ -15,9 +15,9 @@ Including another URLconf
 """
 from django.urls import path
 
-from crm.event.views import CreateEvent, RetrieveUpdateEvent
+from crm.event.views import ListCreateEvent, RetrieveUpdateEvent
 
 urlpatterns = [
-    path("", CreateEvent.as_view(), name="event"),
+    path("", ListCreateEvent.as_view(), name="event"),
     path("<int:pk>/", RetrieveUpdateEvent.as_view(), name="event-details"),
 ]
