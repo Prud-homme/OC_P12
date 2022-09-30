@@ -55,8 +55,8 @@ class ListCreateContract(ListCreateAPIView):
         if email := self.request.GET.get("email"):
             queryset = queryset.filter(client__email__iexact=email)
 
-        if date_created := self.request.GET.get("date"):
-            queryset = queryset.filter(date_created__date=date_created)
+        if payment_due := self.request.GET.get("date"):
+            queryset = queryset.filter(payment_due__date=payment_due)
 
         if amount := self.request.GET.get("amount"):
             queryset = queryset.filter(amount__exact=amount)
