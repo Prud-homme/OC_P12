@@ -114,6 +114,53 @@ class TestClient:
         assert response.status_code == 200
         assert False not in compared_data
 
+        response = api_client.get(self.client_path)
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 3
+
+        response = api_client.get(self.client_path + "?email=janedoe@example.com")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        email = json.loads(content)["results"][0]["email"]
+        assert response.status_code == 200
+        assert count == 1
+        assert email == "janedoe@example.com"
+
+        response = api_client.get(self.client_path + "?email=jagrnedoe@example.com")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 0
+
+        response = api_client.get(self.client_path + "?lastname=Irving")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+
+        assert response.status_code == 200
+        assert count == 1
+
+        response = api_client.get(self.client_path + "?lastname=ddoe")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 0
+
+        response = api_client.get(
+            self.client_path + "?email=janedoe@example.com&lastname=doe"
+        )
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 1
+
+        response = api_client.get(self.client_path + "?title=janedoe@example.com")
+        content = response.content.decode()
+        detail_message = json.loads(content)["detail"]
+        assert response.status_code == 400
+        assert detail_message == "Le(s) filtre(s) n'existe(nt) pas"
+
         api_client.force_authenticate(user=None)
 
     def test_update_client_put_method(self, api_client, crm):
@@ -280,9 +327,6 @@ class TestClient:
         assert response.status_code == 405
 
         response = api_client.patch(self.client_path, post_data)
-        assert response.status_code == 405
-
-        response = api_client.get(self.client_path)
         assert response.status_code == 405
 
         response = api_client.delete(self.client_path)

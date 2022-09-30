@@ -95,6 +95,62 @@ class TestEvent:
         assert response.status_code == 200
         assert data == serial_event_a
 
+        response = api_client.get(self.event_path)
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 2
+
+        response = api_client.get(self.event_path + "?date=2022-09-18")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 2
+
+        response = api_client.get(self.event_path + "?date=2021-09-18")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 0
+
+        response = api_client.get(self.event_path + "?email=janedoe@example.com")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 1
+
+        response = api_client.get(self.event_path + "?email=jagrnedoe@example.com")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 0
+
+        response = api_client.get(self.event_path + "?lastname=doe")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 2
+
+        response = api_client.get(self.event_path + "?lastname=irvng")
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 0
+
+        response = api_client.get(
+            self.event_path + "?email=janedoe@example.com&lastname=doe"
+        )
+        content = response.content.decode()
+        count = json.loads(content)["count"]
+        assert response.status_code == 200
+        assert count == 1
+
+        response = api_client.get(self.event_path + "?title=janedoe@example.com")
+        content = response.content.decode()
+        detail_message = json.loads(content)["detail"]
+        assert response.status_code == 400
+        assert detail_message == "Le(s) filtre(s) n'existe(nt) pas"
+
         api_client.force_authenticate(user=None)
 
     def test_update_event_put_method(self, api_client, crm):
@@ -248,9 +304,6 @@ class TestEvent:
         assert response.status_code == 405
 
         response = api_client.patch(self.event_path, post_data)
-        assert response.status_code == 405
-
-        response = api_client.get(self.event_path)
         assert response.status_code == 405
 
         response = api_client.delete(self.event_path)
