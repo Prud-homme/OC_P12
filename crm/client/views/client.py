@@ -60,7 +60,7 @@ class ListCreateClient(ListCreateAPIView):
         if lastname := self.request.GET.get("lastname"):
             queryset = queryset.filter(lastname__iexact=lastname)
 
-        return queryset
+        return queryset.distinct()
 
 
 class RetrieveUpdateClient(RetrieveUpdateAPIView):
@@ -92,4 +92,4 @@ class RetrieveUpdateClient(RetrieveUpdateAPIView):
         else:
             queryset = Client.objects.none()
 
-        return queryset
+        return queryset.distinct()
