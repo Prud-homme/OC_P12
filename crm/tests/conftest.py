@@ -88,6 +88,8 @@ def crm(db, create_user, create_superuser):
         mobile="0000000000",
         company_name="Example",
         sales_contact=sales_user_a,
+        obtained_with_sales_contact=sales_user_a,
+        client_status="existing",
     )
 
     Client.objects.create(
@@ -98,10 +100,21 @@ def crm(db, create_user, create_superuser):
         mobile="0000000000",
         company_name="AzErty",
         sales_contact=sales_user_a,
+        obtained_with_sales_contact=sales_user_a,
+        client_status="existing",
+    )
+
+    contract_a = Contract.objects.create(
+        sales_contact=sales_user_a,
+        client=client_a,
+        status=True,
+        amount=10000.99,
+        payment_due=datetime(2022, 8, 10).strftime(r"%Y-%m-%dT%H:%M:%SZ"),
     )
 
     event_a = Event.objects.create(
         client=client_a,
+        contract=contract_a,
         support_contact=support_user_a,
         event_status="ongoing",
         attendees=1000,
@@ -113,6 +126,7 @@ def crm(db, create_user, create_superuser):
 
     Event.objects.create(
         client=client_b,
+        contract=contract_a,
         support_contact=support_user_a,
         event_status="ongoing",
         attendees=1000,
@@ -120,13 +134,6 @@ def crm(db, create_user, create_superuser):
         notes="Event BA",
     )
 
-    contract_a = Contract.objects.create(
-        sales_contact=sales_user_a,
-        client=client_a,
-        status=True,
-        amount=10000.99,
-        payment_due=datetime(2022, 8, 10).strftime(r"%Y-%m-%dT%H:%M:%SZ"),
-    )
     serializer = ContractSerializer(contract_a)
     serial_contract_a = serializer.data
 

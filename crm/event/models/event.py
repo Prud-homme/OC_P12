@@ -6,6 +6,7 @@ from django.db import models
 from django.utils import timezone
 
 from crm.client.models import Client
+from crm.contract.models import Contract
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,11 @@ class Event(models.Model):
         to=Client,
         on_delete=models.CASCADE,
         related_name="event_client",
+    )
+    contract = models.ForeignKey(
+        to=Contract,
+        on_delete=models.CASCADE,
+        related_name="event_contract",
     )
     support_contact = models.ForeignKey(
         to=settings.AUTH_USER_MODEL,
