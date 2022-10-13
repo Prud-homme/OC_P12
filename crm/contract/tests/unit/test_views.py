@@ -29,7 +29,9 @@ class TestContract:
         response = api_client.post(self.contract_path, post_data)
         content = response.content.decode()
         data_to_compare = {
-            key: value for key, value in json.loads(content).items() if key != "id"
+            key: value
+            for key, value in json.loads(content).items()
+            if key not in ["id", "event_contract"]
         }
 
         assert response.status_code == 201
@@ -191,7 +193,9 @@ class TestContract:
         response = api_client.put(path, post_data)
         content = response.content.decode()
         data_to_compare = {
-            key: value for key, value in json.loads(content).items() if key != "id"
+            key: value
+            for key, value in json.loads(content).items()
+            if key not in ["id", "event_contract"]
         }
         contract_id = json.loads(content)["id"]
         assert response.status_code == 200
@@ -216,7 +220,9 @@ class TestContract:
         response = api_client.put(path, post_data)
         content = response.content.decode()
         data_to_compare = {
-            key: value for key, value in json.loads(content).items() if key != "id"
+            key: value
+            for key, value in json.loads(content).items()
+            if key not in ["id", "event_contract"]
         }
         contract_id = json.loads(content)["id"]
         assert response.status_code == 200

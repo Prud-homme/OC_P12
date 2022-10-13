@@ -23,6 +23,8 @@ class TestClient:
             "mobile": "0000000000",
             "company_name": "Example",
             "sales_contact": sales_user_a.id,
+            "obtained_with_sales_contact": sales_user_a.id,
+            "client_status": "existing",
         }
 
         api_client.force_authenticate(user=sales_user_a)
@@ -180,6 +182,8 @@ class TestClient:
             "mobile": "0000000001",
             "company_name": "ExampleD",
             "sales_contact": sales_user_b.id,
+            "obtained_with_sales_contact": sales_user_b.id,
+            "client_status": "existing",
         }
 
         api_client.force_authenticate(user=support_user_a)
@@ -218,6 +222,8 @@ class TestClient:
             "mobile": "0000000000",
             "company_name": "Example",
             "sales_contact": sales_user_a.id,
+            "obtained_with_sales_contact": sales_user_a.id,
+            "client_status": "existing",
         }
 
         api_client.force_authenticate(user=management_user)

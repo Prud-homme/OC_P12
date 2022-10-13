@@ -16,9 +16,11 @@ class TestEvent:
         sales_user_a = crm["sales_user_a"]
         support_user_a = crm["support_user_a"]
         management_user = crm["management_user"]
+        contract_a = crm["contract_a"]
 
         post_data = {
             "client": client_a.id,
+            "contract": contract_a.id,
             "support_contact": support_user_a.id,
             "event_status": "ongoing",
             "attendees": 1000,
@@ -161,11 +163,13 @@ class TestEvent:
         client_a = crm["client_a"]
         client_b = crm["client_b"]
         event_a = crm["event_a"]
+        contract_a = crm["contract_a"]
 
         path = reverse("event-details", kwargs={"pk": event_a.id})
 
         post_data = {
             "client": client_b.id,
+            "contract": contract_a.id,
             "support_contact": support_user_b.id,
             "event_status": "ended",
             "attendees": 10000,
@@ -201,6 +205,7 @@ class TestEvent:
 
         post_data = {
             "client": client_a.id,
+            "contract": contract_a.id,
             "support_contact": support_user_a.id,
             "event_status": "ongoing",
             "attendees": 100,
